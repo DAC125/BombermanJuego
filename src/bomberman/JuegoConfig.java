@@ -9,5 +9,8 @@ public class JuegoConfig {
                             TIEMPO = 200,
                             PUNTOS = 0,
                             VIDAS = 3,
-                            DELAYTEMPLVL = 3;
+                            DELAYTEMPLVL = 3,
+                            ESCALA = 3;
+
+
 }

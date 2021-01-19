@@ -32,16 +32,16 @@ public class PanelInfo extends JPanel{
         setPreferredSize(new Dimension(0, 40));
     }
 
-    public void setTime(int t) {
+    public void setTiempo(int t) {
         timeLabel.setText("Time: " + t);
     }
 
-    public void setLives(int t) {
+    public void setVidas(int t) {
         livesLabel.setText("Lives: " + t);
 
     }
 
-    public void setPoints(int t) {
+    public void setPuntos(int t) {
         pointsLabel.setText("Points: " + t);
     }
 

@@ -1,5 +1,9 @@
 package bomberman;
 import java.awt.*;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+
 public class Juego extends Canvas{
 
     private Frame frame;
@@ -11,6 +15,11 @@ public class Juego extends Canvas{
 
     private Tablero tablero;
     private Pantalla pantalla;
+    private int delayTempLvl = config.DELAYTEMPLVL;
+
+
+    private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+    private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
 
 
     public Juego(Frame frame){
@@ -25,9 +34,51 @@ public class Juego extends Canvas{
         addKeyListener(teclado);
     }
 
+    private void renderJuego(){
+        BufferStrategy bs = getBufferStrategy();
+        if(bs == null) {
+            createBufferStrategy(3);
+            return;
+        }
+
+        pantalla.limpiar();
+
+        tablero.render(pantalla);
+
+        for (int i = 0; i < pixels.length; i++) { //create the image to be rendered
+            pixels[i] = pantalla.pixeles[i];
+        }
+
+        Graphics g = bs.getDrawGraphics();
+
+        g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+
+
+        g.dispose(); //release resources
+        bs.show(); //make next buffer visible
+    }
+
+    private void renderPantalla() { //TODO: merge these render methods
+        BufferStrategy bs = getBufferStrategy();
+        if(bs == null) {
+            createBufferStrategy(3);
+            return;
+        }
+
+        pantalla.limpiar();
+
+        Graphics g = bs.getDrawGraphics();
+
+
+        tablero.drawScreen(g);
+
+        g.dispose();
+        bs.show();
+    }
+
     private void actualizar() {
-        //teclado.actualizar();
-        //tablero.actualizar();
+        teclado.actualiza();
+        tablero.actualiza();
     }
 
     public void iniciaJuego(){
@@ -48,10 +99,42 @@ public class Juego extends Canvas{
                 actualizaciones++;
                 delta--;
             }
+
+            if(pausa){
+                if (delayTempLvl <= 0){
+                    tablero.setPantallaMostar(-1);
+                    pausa = false;
+                }
+
+                renderPantalla();
+
+            }else{
+
+                renderJuego();
+
+            }
+            frames++;
+            if(System.currentTimeMillis() - timer > 1000) { //once per second
+                frame.setTiempo(tablero.restaTiempo());
+                frame.setPuntos(tablero.getPuntos());
+                frame.setVidas(tablero.getVidas());
+                timer += 1000;
+                actualizaciones = 0;
+                frames = 0;
+
+                if(tablero.getPantallaMostar() == 2)
+                    --delayTempLvl;
+            }
         }
 
     }
 
+    public boolean estaPausado(){
+        return pausa;
+    }
+    public boolean estaCoriendo(){
+        return corriendo;
+    }
     public Tablero getTablero(){
         return tablero;
     }

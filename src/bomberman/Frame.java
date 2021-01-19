@@ -18,8 +18,8 @@ public class Frame extends JFrame {
         panelJuego = new PanelJuego(this);
         panelInfo = new PanelInfo(panelJuego.getJuego());
 
-        containerpane.add(panelJuego,BorderLayout.PAGE_START);
-        //containerpane.add(panelInfo,BorderLayout.PAGE_END);
+        containerpane.add(panelInfo,BorderLayout.PAGE_START);
+        containerpane.add(panelJuego,BorderLayout.PAGE_END);
 
         juego = panelJuego.getJuego();
 
@@ -33,4 +33,37 @@ public class Frame extends JFrame {
 
         juego.iniciaJuego();
     }
+    /*
+    public void nuevoJuego() {
+        juego.getTablero().nuevoJuego();
+    }
+*/
+    public void cambiarNivel(int i) {
+        juego.getTablero().cambiarNivel(i);
+    }
+/*
+    public void pausarJuego() {
+        juego.getTablero().pausar();
+    }
+
+    public void reanudarJuego() {
+        juego.getTablero().reanudar();
+    }*/
+
+    public boolean estaCoriendo() {
+        return juego.estaCoriendo();
+    }
+
+    public void setTiempo(int tiempo) {
+        panelInfo.setTiempo(tiempo);
+    }
+
+    public void setVidas(int vidas) {
+        panelInfo.setVidas(vidas);
+    }
+
+    public void setPuntos(int puntos) {
+        panelInfo.setPuntos(puntos);
+    }
+
 }
