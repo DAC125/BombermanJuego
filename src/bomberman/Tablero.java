@@ -32,21 +32,28 @@ public class Tablero {
         int x1 = (Pantalla.xOffset + pantalla.getLargo() + JuegoConfig.TAMAÑO_BLOQUE) / JuegoConfig.TAMAÑO_BLOQUE; // -> right X
         int y0 = Pantalla.yOffset >> 4;
         int y1 = (Pantalla.yOffset + pantalla.getAncho()) / JuegoConfig.TAMAÑO_BLOQUE; //render one tile plus to fix black margins
-/*
-        for (int y = y0; y < y1; y++) {
-            for (int x = x0; x < x1; x++) {
-                _entities[x + y * _level.getWidth()].render(screen);
+
+        char[][] mapa = nivel.getMapa();
+
+        for (int y = y0; y <y1; y++){
+            for (int x = x0; y< x1; x++){
+                //pantalla.renderEntidades(x*16,y*16,mapa[x][y]);
             }
         }
-
+        /*
         renderBombs(screen);
         renderMobs(screen);*/
 
     }
 
-    public void cambiarNivel(int nivel){
+
+
+    public void cambiarNivel(int lvl){
         tiempo = JuegoConfig.TIEMPO;
         pantallaMostar = 2;
+        nivel = new Nivel(13, 31, 25, 1, 20);
+        nivel.imprimir(nivel.getMapa());
+
     }
 
     public void drawScreen(Graphics g) {

@@ -6,14 +6,29 @@ public class Pantalla {
     protected int ancho, largo;
     public int[] pixeles;
     public static int xOffset = 0, yOffset = 0;
-    private JuegoConfig  config = new JuegoConfig();
+    private JuegoConfig config = new JuegoConfig();
 
-    public Pantalla(int ancho, int largo){
+    public Pantalla(int ancho, int largo) {
         this.ancho = ancho;
         this.largo = largo;
-        pixeles = new int[ancho*largo];
+        pixeles = new int[ancho * largo];
     }
 
+/*
+    public void renderEntidades(int xp, int yp,char entidad){
+        xp -= xOffset;
+        yp -= yOffset;
+        for (int y = 0; y < 16; y++) {
+            int ya = y + yp; //add offset
+            for (int x = 0; x < 16; x++) {
+                int xa = x + xp; //add offset
+                if(xa < -16 || xa >= largo || ya < 0 || ya >= ancho) break; //fix black margins
+                if(xa < 0) xa = 0; //start at 0 from left
+                int color = imagen.getPixel(x + y * 16);
+                pixeles[xa + ya * largo] = color;
+            }
+        }
+    }*/
     public void drawChangeLevel(Graphics g) {
         g.setColor(Color.black);
         g.fillRect(0, 0, getRealLargo(), getRealancho());
