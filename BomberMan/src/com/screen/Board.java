@@ -1,4 +1,8 @@
 package com.screen;
+
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
 public class Board {
     public char tablero[][];
     private int largo;
@@ -58,7 +62,7 @@ public class Board {
     }
 
     public void imprimir(char[][] tab){
-        for(int i = 0; i<this.largo; i++){
+        for(int i = 0; i<tab.length; i++){
             System.out.println(tab[i]);
         }
     }
@@ -86,4 +90,5 @@ public class Board {
         }
         return fact;
     }
+
 }
