@@ -1,6 +1,7 @@
 package com.screen;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class IA {
@@ -122,14 +123,69 @@ public class IA {
     }
     public int[] nivel2(int bx, int by, int posx ,int posy){
         double rand = Math.random();
-        if(rand>=0.75){
+        if(rand<=0.75){
+            int res[] = new int[2];
+            Node objetivo = new Node(bx,by);
+            Node inicio = new Node(posx,posy);
+            AStar aStar = new AStar(this.mapa.getLargo(), this.mapa.getAncho(), inicio, objetivo);
+            aStar.setBlocks(this.mapa.getObstaculos());
+            List<Node> camino = aStar.findPath();
+            try {
+                Node respuesta = camino.get(1);
+                res[0] = respuesta.getRow();
+                res[1] = respuesta.getCol();
+            }catch (Exception e){
+                System.out.println(e);
+            }
 
+            return res;
         }else{
             return GenRandom(posx,posy);
         }
     }
-  x
-xxBxx
+
+    public int[] nivel3(int bx, int by, int posx ,int posy){
+        int res[] = new int[2];
+        Node objetivo = new Node(bx,by);
+        Node inicio = new Node(posx,posy);
+        AStar aStar = new AStar(this.mapa.getLargo(), this.mapa.getAncho(), inicio, objetivo);
+        aStar.setBlocks(this.mapa.getObstaculos());
+        List<Node> camino = aStar.findPath();
+        int total = camino.size();
+        System.out.println("Total camino = "+ total);
+        if(total<=30){
+            try {
+                Node respuesta = camino.get(1);
+                res[0] = respuesta.getRow();
+                res[1] = respuesta.getCol();
+            }catch (Exception e){
+                System.out.println(e);
+            }
+
+            return res;
+        }else{
+            return GenRandom(posx,posy);
+        }
+    }
+    public int[] nivel4(int bx, int by, int posx ,int posy){
+        int res[] = new int[2];
+        Node objetivo = new Node(bx,by);
+        Node inicio = new Node(posx,posy);
+        AStar aStar = new AStar(this.mapa.getLargo(), this.mapa.getAncho(), inicio, objetivo);
+        aStar.setBlocks(this.mapa.getObstaculos());
+        List<Node> camino = aStar.findPath();
+        int total = camino.size();
+        System.out.println("Total camino = "+ total);
+        try {
+            Node respuesta = camino.get(1);
+            res[0] = respuesta.getRow();
+            res[1] = respuesta.getCol();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return res;
+    }
+
 
     public void animarTemp(int bx, int by, int pEx, int pEy){//funcion temporal que grafica el mapa del juego y sirve para probar las IAs, tiene un delay de 1s por cada iteracion
         this.mapa.tablero[bx][by] = 'B';
@@ -140,7 +196,7 @@ xxBxx
             }
             try {
                 this.mapa.tablero[pEx][pEy] = ' ';
-                int[] pos = nivel1(bx,by,pEx,pEy);
+                int[] pos = nivel4(bx,by,pEx,pEy);
                 this.mapa.tablero[pos[0]][pos[1]] = '*';
                 TimeUnit.SECONDS.sleep(1);
                 pEx = pos[0];

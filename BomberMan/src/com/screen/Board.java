@@ -12,9 +12,19 @@ public class Board {
     private int numVill;
     private double distribucion;
     private double distribucionMayor;
+    private ArrayList<Node> obstaculos;
 
     public Board(){
 
+    }
+    public int getLargo(){
+        return this.largo;
+    }
+    public int getAncho(){
+        return this.ancho;
+    }
+    public ArrayList<Node> getObstaculos(){
+        return this.obstaculos;
     }
     public Board(int l, int a,float p,int n, int num){
         this.ancho = a;
@@ -22,6 +32,7 @@ public class Board {
         this.proba = p/100;
         this.nivel = n;
         this.numVill = num;
+        this.obstaculos = new ArrayList<>();
         this.distribucion = distribucionEnemigos(n,num);
         this.distribucionMayor = distribucionMenor(n,num);
         this.tablero = crearTablero(a,l);
@@ -37,9 +48,13 @@ public class Board {
         for(int i = 0; i < l; i++){
             for(int j = 0; j < a; j++) {
                 if(j == 0 || j == a-1 || i == 0 || i == l-1 ) {
+                    Node nuevo = new Node(i,j);
                     board[i][j] = 'X';
+                    this.obstaculos.add(nuevo);
                 }else if(j%2 == 0 && i%2 == 0){
+                    Node nuevo = new Node(i,j);
                     board[i][j] = 'X';
+                    this.obstaculos.add(nuevo);
                 }else{
                     if(i<=3 && j<=3){
                         board[i][j] = ' ';
@@ -50,6 +65,8 @@ public class Board {
                             temp--;
                         }else if(rand<=this.proba){
                             board[i][j] = '_';
+                            Node nuevo = new Node(i,j);
+                            this.obstaculos.add(nuevo);
                         }else{
                             board[i][j] = ' ';
                         }
