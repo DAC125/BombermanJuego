@@ -35,9 +35,9 @@ public class Tablero {
 
         char[][] mapa = nivel.getMapa();
 
-        for (int y = y0; y <y1; y++){
-            for (int x = x0; y< x1; x++){
-                //pantalla.renderEntidades(x*16,y*16,mapa[x][y]);
+        for (int y = 0; y <5; y++){
+            for (int x = 0; x < 5; x++){
+                pantalla.renderEntidades(x*16,y*16,mapa[x][y]);
             }
         }
         /*

@@ -14,10 +14,11 @@ public class Pantalla {
         pixeles = new int[ancho * largo];
     }
 
-/*
+
     public void renderEntidades(int xp, int yp,char entidad){
         xp -= xOffset;
         yp -= yOffset;
+        Imagenes imagen = new Imagenes(new CargaImagenes(CargaImagenes.muroAcero));
         for (int y = 0; y < 16; y++) {
             int ya = y + yp; //add offset
             for (int x = 0; x < 16; x++) {
@@ -26,9 +27,10 @@ public class Pantalla {
                 if(xa < 0) xa = 0; //start at 0 from left
                 int color = imagen.getPixel(x + y * 16);
                 pixeles[xa + ya * largo] = color;
+                System.out.println(color);
             }
         }
-    }*/
+    }
     public void drawChangeLevel(Graphics g) {
         g.setColor(Color.black);
         g.fillRect(0, 0, getRealLargo(), getRealancho());
