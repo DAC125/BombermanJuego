@@ -8,14 +8,26 @@ import java.net.URL;
 
 public class CargaImagenes {
 
+    public static BufferedImage cargaImagen(String ruta){
+        try {
+            return ImageIO.read(CargaImagenes.class.getResource(ruta));
+        }catch (IOException e){
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return null;
+    }
+    /*
     private String ruta;
     public final int TAMAÑO = 16;
     public int[] pixeles = new int[16*16];;
 
-    public static String muroAcero = "res/Board/MuroAcero.png";
-   // public static String pasto = "/res/Board/Fondo.png";
+    public static String muroAcero = "res/Board/Muro.png";
+    public static String pasto = "res/Board/Fondo.png";
 
+    public CargaImagenes(){
 
+    }
     public CargaImagenes(String ruta){
         this.ruta = ruta;
         cargar();
@@ -33,5 +45,5 @@ public class CargaImagenes {
             e.printStackTrace();
             System.exit(0);
         }
-    }
+    }*/
 }

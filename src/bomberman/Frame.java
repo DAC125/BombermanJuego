@@ -31,7 +31,7 @@ public class Frame extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
 
-        juego.iniciaJuego();
+        juego.run();
     }
     /*
     public void nuevoJuego() {

@@ -4,7 +4,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
-public class Juego extends Canvas{
+public class Juego extends Canvas implements Runnable {
 
     private Frame frame;
     private JuegoConfig config;
@@ -17,6 +17,7 @@ public class Juego extends Canvas{
     private Pantalla pantalla;
     private int delayTempLvl = config.DELAYTEMPLVL;
 
+    private Thread thread;
 
     private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
     private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
@@ -25,15 +26,19 @@ public class Juego extends Canvas{
     public Juego(Frame frame){
         this.frame = frame;
         frame.setTitle("Bomberman");
-
         pantalla = new Pantalla(config.ANCHO, config.LARGO);
 
         teclado = new Teclado();
 
         tablero = new Tablero(this, teclado, pantalla);
         addKeyListener(teclado);
+
     }
 
+    private void init(){
+        Imagenes.init();
+
+    }
     private void renderJuego(){
         BufferStrategy bs = getBufferStrategy();
         if(bs == null) {
@@ -43,15 +48,16 @@ public class Juego extends Canvas{
 
         pantalla.limpiar();
 
-        tablero.render(pantalla);
+        BufferedImage render[][] = tablero.render(pantalla);
 
-        for (int i = 0; i < pixels.length; i++) { //create the image to be rendered
-            pixels[i] = pantalla.pixeles[i];
-        }
+
 
         Graphics g = bs.getDrawGraphics();
-
-        g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+        for (int y = 0; y <13; y++) {
+            for (int x = 0; x < 31; x++) {
+                g.drawImage(render[y][x],x*48,y*48,null);
+            }
+        }
 
 
         g.dispose(); //release resources
@@ -81,22 +87,28 @@ public class Juego extends Canvas{
         tablero.actualiza();
     }
 
-    public void iniciaJuego(){
+
+    @Override
+    public void run() {
+        init();
         corriendo = true;
-        long ultimoTemp = System.nanoTime();
-        long timer = System.currentTimeMillis();
-        final double nanosegs = 1000000000.0 / 60.0;
+        int fps = 60;
+        double timePerFrame = 1000000000 / fps;
         double delta = 0;
+        long tiempoAhora;
+        long tiempoUltimo = System.nanoTime();
+        long timer = 0;
         int frames = 0;
-        int actualizaciones = 0;
         requestFocus();
-        while(corriendo){
-            long tempAhora = System.nanoTime();
-            delta += (tempAhora - ultimoTemp) / nanosegs;
-            ultimoTemp = tempAhora;
-            while (delta >=1){
+        while (corriendo){
+            tiempoAhora = System.nanoTime();
+            delta += (tiempoAhora - tiempoUltimo)/timePerFrame;
+            timer += tiempoAhora - tiempoUltimo;
+            tiempoUltimo = tiempoAhora;
+
+            if (delta >= 1){
                 actualizar();
-                actualizaciones++;
+                frames++;
                 delta--;
             }
 
@@ -105,29 +117,45 @@ public class Juego extends Canvas{
                     tablero.setPantallaMostar(-1);
                     pausa = false;
                 }
-
                 renderPantalla();
-
             }else{
-
                 renderJuego();
-
             }
-            frames++;
-            if(System.currentTimeMillis() - timer > 1000) { //once per second
+
+            if (timer >= 1000000000){
                 frame.setTiempo(tablero.restaTiempo());
                 frame.setPuntos(tablero.getPuntos());
                 frame.setVidas(tablero.getVidas());
-                timer += 1000;
-                actualizaciones = 0;
+                System.out.println("fps:" + frames);
                 frames = 0;
-
+                timer = 0;
                 if(tablero.getPantallaMostar() == 2)
                     --delayTempLvl;
             }
         }
+    }
+
+    public synchronized void start(){
+        if (corriendo)
+            return;
+        corriendo = true;
+        thread = new Thread(this);
+        thread.start();
+    }
+    public synchronized void stop(){
+        if (!corriendo)
+            return;
+        corriendo= false;
+        try {
+            thread.join();
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
 
     }
+
+
+
 
     public boolean estaPausado(){
         return pausa;
@@ -138,4 +166,6 @@ public class Juego extends Canvas{
     public Tablero getTablero(){
         return tablero;
     }
+
+
 }

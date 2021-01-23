@@ -1,6 +1,7 @@
 package bomberman;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class Tablero {
     protected Nivel nivel;
@@ -24,8 +25,8 @@ public class Tablero {
         if(juego.estaPausado())return;
     }
 
-    public void render(Pantalla pantalla) {
-        if( juego.estaPausado()) return;
+    public BufferedImage[][] render(Pantalla pantalla) {
+        if( juego.estaPausado()) return null;
 
         //only render the visible part of screen
         int x0 = Pantalla.xOffset >> 4; //tile precision, -> left X
@@ -34,12 +35,27 @@ public class Tablero {
         int y1 = (Pantalla.yOffset + pantalla.getAncho()) / JuegoConfig.TAMAÑO_BLOQUE; //render one tile plus to fix black margins
 
         char[][] mapa = nivel.getMapa();
+        BufferedImage entidades[][] = new BufferedImage[13][31];
+        for (int y = 0; y <13; y++){
+            for (int x = 0; x < 31; x++){
+                switch (mapa[y][x]){
+                    case 'X':
+                        entidades[y][x]=Imagenes.muroAcero;
+                        break;
+                    case ' ':
+                        entidades[y][x]=Imagenes.pasto;
+                        break;
+                    case '_':
+                        entidades[y][x]=Imagenes.muroPiedra;
+                        break;
+                    default:
+                        entidades[y][x]=Imagenes.pasto;
+                        break;
 
-        for (int y = 0; y <5; y++){
-            for (int x = 0; x < 5; x++){
-                pantalla.renderEntidades(x*16,y*16,mapa[x][y]);
+                }
             }
         }
+        return entidades;
         /*
         renderBombs(screen);
         renderMobs(screen);*/

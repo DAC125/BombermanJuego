@@ -54,7 +54,7 @@ public class Nivel {
     }
 
     public void imprimir(char[][] tab){
-        for(int i = 0; i<this.largo; i++){
+        for(int i = 0; i<largo; i++){
             System.out.println(tab[i]);
         }
     }
