@@ -1,4 +1,4 @@
-package com.screen;
+package BackEnd;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,7 +152,7 @@ public class IA {
         aStar.setBlocks(this.mapa.getObstaculos());
         List<Node> camino = aStar.findPath();
         int total = camino.size();
-        System.out.println("Total camino = "+ total);
+        //System.out.println("Total camino = "+ total);
         if(total<=30){
             try {
                 Node respuesta = camino.get(1);
@@ -174,8 +174,6 @@ public class IA {
         AStar aStar = new AStar(this.mapa.getLargo(), this.mapa.getAncho(), inicio, objetivo);
         aStar.setBlocks(this.mapa.getObstaculos());
         List<Node> camino = aStar.findPath();
-        int total = camino.size();
-        System.out.println("Total camino = "+ total);
         try {
             Node respuesta = camino.get(1);
             res[0] = respuesta.getRow();
@@ -196,7 +194,7 @@ public class IA {
             }
             try {
                 this.mapa.tablero[pEx][pEy] = ' ';
-                int[] pos = nivel4(bx,by,pEx,pEy);
+                int[] pos = nivel3(bx,by,pEx,pEy);
                 this.mapa.tablero[pos[0]][pos[1]] = '*';
                 TimeUnit.SECONDS.sleep(1);
                 pEx = pos[0];
