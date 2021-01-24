@@ -58,6 +58,7 @@ public class Juego extends Canvas implements Runnable {
                 g.drawImage(render[y][x],x*48,y*48,null);
             }
         }
+        g.drawImage(Imagenes.playerDer, 1*48, 1*48, null);
 
 
         g.dispose(); //release resources
