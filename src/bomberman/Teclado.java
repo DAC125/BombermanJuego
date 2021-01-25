@@ -29,5 +29,6 @@ public class Teclado implements KeyListener {
     public void keyReleased(KeyEvent e) {
         teclas[e.getKeyCode()] = false;
 
+
     }
 }

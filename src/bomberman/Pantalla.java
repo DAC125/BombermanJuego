@@ -42,7 +42,7 @@ for (int y = 0; y < 16; y++) {
         Font font = new Font("Arial", Font.PLAIN, 20 * JuegoConfig.ESCALA);
         g.setFont(font);
         g.setColor(Color.white);
-        drawCenteredString("Ricky Me la Suda" , getRealLargo(), getRealancho(), g);
+        drawCenteredString("Nivel " + Nivel.nivel , getRealLargo(), getRealancho(), g);
 
     }
 

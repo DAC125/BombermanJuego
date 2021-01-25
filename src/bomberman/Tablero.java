@@ -14,6 +14,9 @@ public class Tablero {
     private int pantallaMostar = -1;  //1: fin de juego, 2: cambiar nivel, 3: juego en pausa
     public int xPlayer = 48;
     public int yPlayer = 48;
+    private int movimiento = 0, estado = 1;
+
+    private Animacion animAbajo,animArr,animIzq,animDer;
 
     public Tablero(Juego juego, Teclado teclado, Pantalla pantalla){
         this.juego = juego;
@@ -21,44 +24,106 @@ public class Tablero {
         this.pantalla = pantalla;
 
         cambiarNivel(1);
+
     }
 
     public void actualiza(){
         if(juego.estaPausado())return;
+        animAbajo.tick();
+        animDer.tick();
+        animIzq.tick();
+        animArr.tick();
         actualizaPlayer();
-        actializaMapa();
-        nivel.imprimir(nivel.getMapa());
+        System.out.println("x:"+xPlayer/48+" y:"+yPlayer/48);
+        //nivel.imprimir(nivel.getMapa());
 
     }
-    private void actualizaPlayer(){
-        if(teclado.derecha) {
-            xPlayer += 2;
-            if (xPlayer % 48 == 0)
-                nivel.setMapa(xPlayer - 2, yPlayer, xPlayer, yPlayer);
+    public void animacion(){
+        animAbajo = new Animacion(250,Imagenes.player_abajo);
+        animArr = new Animacion(250,Imagenes.player_arriba);
+        animIzq = new Animacion(250,Imagenes.player_izquierda);
+        animDer = new Animacion(250,Imagenes.player_derecha);
+    }
+    public BufferedImage renderPlayer(){
+        if (movimiento == 0){
+            if (estado==1)
+                return Imagenes.playerDer;
+            if (estado==2)
+                return Imagenes.playerAbj;
+            if (estado==3)
+                return Imagenes.playerIzq;
+            if (estado==4)
+                return Imagenes.playerArr;
         }
+
+        if (movimiento == 1)
+            return animDer.getCurrentFrame();
+        if (movimiento == 2)
+            return animAbajo.getCurrentFrame();
+        if (movimiento == 3)
+            return animIzq.getCurrentFrame();
+        if (movimiento == 4)
+            return animArr.getCurrentFrame();
+
+
+
+        return null;
+    }
+
+    public boolean colicion(int x, int y){
+        char[][] mapa = nivel.getMapa();
+        if (mapa[y][x]==' '){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    private void actualizaPlayer(){
+
+        movimiento = 0;
+        if(teclado.derecha) {
+            if (!colicion((xPlayer+48)/48, yPlayer/48)) {
+                xPlayer += 2;
+                movimiento = 1;
+            }else{
+              movimiento = 0;
+            }
+            estado = 1;
+        }
+
         if (teclado.abajo){
-            yPlayer += 2;
-            if (xPlayer % 48 == 0)
-                nivel.setMapa(xPlayer ,yPlayer-2, xPlayer, yPlayer);
+            if (!colicion(xPlayer/48, (yPlayer+48)/48)){
+                yPlayer += 2;
+                movimiento = 2;
+            }else{
+                movimiento = 0;
+            }
+            estado=2;
         }
 
         if(teclado.izquierda) {
-            xPlayer -= 3;
-            if (xPlayer % 48 == 0)
-                nivel.setMapa(xPlayer + 2, yPlayer, xPlayer, yPlayer);
+            if (!colicion((xPlayer-2)/48, (yPlayer)/48)){
+                xPlayer -= 2;
+                movimiento=3;
+            }else{
+                movimiento = 0;
+            }
+
+            estado=3;
         }
         if (teclado.arriba) {
-            yPlayer -= 3;
-            if (xPlayer % 48 == 0)
-                nivel.setMapa(xPlayer, yPlayer+2, xPlayer, yPlayer);
+            if (!colicion((xPlayer)/48, (yPlayer-2)/48)) {
+                yPlayer -= 2;
+                movimiento = 4;
+            }
+            estado=4;
         }
 
 
 
     }
-    private void actializaMapa(){
 
-    }
     public BufferedImage[][] render(Pantalla pantalla) {
         if( juego.estaPausado()) return null;
 
@@ -101,7 +166,7 @@ public class Tablero {
     public void cambiarNivel(int lvl){
         tiempo = JuegoConfig.TIEMPO;
         pantallaMostar = 2;
-        nivel = new Nivel(13, 31, 25, 1, 20);
+        nivel = new Nivel(13, 31, 25, lvl, JuegoConfig.numVillanos);
         nivel.imprimir(nivel.getMapa());
 
     }
@@ -143,5 +208,9 @@ public class Tablero {
             return this.tiempo;
         else
             return this.tiempo--;
+    }
+
+    public void setMovimiento(int estado){
+        movimiento = estado;
     }
 }

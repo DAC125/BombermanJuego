@@ -40,6 +40,7 @@ public class Juego extends Canvas implements Runnable {
     private void init(){
         Imagenes.init();
 
+
     }
     private void renderJuego(){
         BufferStrategy bs = getBufferStrategy();
@@ -62,7 +63,7 @@ public class Juego extends Canvas implements Runnable {
         }
 
 
-        g.drawImage(Imagenes.playerDer, tablero.xPlayer, tablero.yPlayer, null);
+        g.drawImage(tablero.renderPlayer(), tablero.xPlayer, tablero.yPlayer, null);
 
 
         g.dispose(); //release resources
@@ -96,6 +97,7 @@ public class Juego extends Canvas implements Runnable {
     @Override
     public void run() {
         init();
+        tablero.animacion();
         corriendo = true;
         int fps = 60;
         double timePerFrame = 1000000000 / fps;

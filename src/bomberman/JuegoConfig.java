@@ -12,5 +12,7 @@ public class JuegoConfig {
                             DELAYTEMPLVL = 3,
                             ESCALA = 3;
 
+    public static int numVillanos = 5;
+
 
 }
