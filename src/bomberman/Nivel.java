@@ -39,7 +39,6 @@ public class Nivel {
         this.mapa = crearTablero(ancho,largo);
         this.enemigos = colocarEnemigos();
         imprimir(this.mapa);
-
     }
 
     public char[][] crearTablero(int a, int l){
@@ -82,8 +81,8 @@ public class Nivel {
             if( this.mapa[xRand][yRand] == ' ' && xRand>3 && yRand>3){
                 int rand = (int)(Math.random()*100);
                 int nivel = seleccionarEnemigo(this.probabilidadesEnemigos,rand);
-                char enemigo  = (char)(96 + nivel);
-                Villano nuevo = new Villano(nivel,xRand,yRand);
+                Villano nuevo = new Villano(nivel,xRand,yRand, this);
+                char enemigo  = (char)(96 +nuevo.getNivel());
                 lista.add(nuevo);
                 this.mapa[xRand][yRand] = enemigo;
                 temp--;
@@ -113,9 +112,19 @@ public class Nivel {
     public int[][] calcularProbabilidades(){
         double[] pruebas = new double[this.nivel-1];
         for(int i = 1;i<this.nivel;i++){
-            //System.out.println(i);
-            pruebas[i-1] = distribucionEnemigos(i,this.numVill);
-            //ystem.out.println(pruebas[i-1]);
+            if(nivel>=1 && nivel<=3){
+                pruebas[i-1] = distribucionEnemigos(i,nivel);
+            }else if(nivel>3 && nivel<6){
+                pruebas[i-1] = distribucionEnemigos(i,3);
+            }else if(nivel>=6 && nivel<8){
+                pruebas[i-1] = distribucionEnemigos(i,4);
+            }else if(nivel>=8 && nivel<11){
+                pruebas[i-1] = distribucionEnemigos(i,5);
+            }else if(nivel>=11 && nivel<14){
+                pruebas[i-1] = distribucionEnemigos(i,6);
+            }else{
+                pruebas[i-1] = distribucionEnemigos(i,7);
+            }
         }
         return crearMatrizProba(pruebas);
     }
