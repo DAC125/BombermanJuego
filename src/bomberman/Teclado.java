@@ -21,11 +21,13 @@ public class Teclado implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        teclas[e.getKeyCode()] = true;
 
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+        teclas[e.getKeyCode()] = false;
 
     }
 }

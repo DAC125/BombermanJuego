@@ -81,6 +81,12 @@ public class Nivel {
         return fact;
     }
 
+    public void setMapa(int x,int y,int xp, int yp){
+        char aux;
+        aux = mapa[xp][yp];
+        mapa[xp][yp] = mapa[x][y];
+        mapa[x][y]=aux;
+    }
     public char[][] getMapa() {
         return mapa;
     }

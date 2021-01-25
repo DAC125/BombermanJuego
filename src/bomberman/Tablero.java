@@ -12,6 +12,8 @@ public class Tablero {
     private int puntos = JuegoConfig.PUNTOS;
     private int vidas = JuegoConfig.VIDAS;
     private int pantallaMostar = -1;  //1: fin de juego, 2: cambiar nivel, 3: juego en pausa
+    public int xPlayer = 48;
+    public int yPlayer = 48;
 
     public Tablero(Juego juego, Teclado teclado, Pantalla pantalla){
         this.juego = juego;
@@ -23,8 +25,40 @@ public class Tablero {
 
     public void actualiza(){
         if(juego.estaPausado())return;
-    }
+        actualizaPlayer();
+        actializaMapa();
+        nivel.imprimir(nivel.getMapa());
 
+    }
+    private void actualizaPlayer(){
+        if(teclado.derecha) {
+            xPlayer += 2;
+            if (xPlayer % 48 == 0)
+                nivel.setMapa(xPlayer - 2, yPlayer, xPlayer, yPlayer);
+        }
+        if (teclado.abajo){
+            yPlayer += 2;
+            if (xPlayer % 48 == 0)
+                nivel.setMapa(xPlayer ,yPlayer-2, xPlayer, yPlayer);
+        }
+
+        if(teclado.izquierda) {
+            xPlayer -= 3;
+            if (xPlayer % 48 == 0)
+                nivel.setMapa(xPlayer + 2, yPlayer, xPlayer, yPlayer);
+        }
+        if (teclado.arriba) {
+            yPlayer -= 3;
+            if (xPlayer % 48 == 0)
+                nivel.setMapa(xPlayer, yPlayer+2, xPlayer, yPlayer);
+        }
+
+
+
+    }
+    private void actializaMapa(){
+
+    }
     public BufferedImage[][] render(Pantalla pantalla) {
         if( juego.estaPausado()) return null;
 

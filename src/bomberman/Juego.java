@@ -23,6 +23,7 @@ public class Juego extends Canvas implements Runnable {
     private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
 
 
+
     public Juego(Frame frame){
         this.frame = frame;
         frame.setTitle("Bomberman");
@@ -31,6 +32,7 @@ public class Juego extends Canvas implements Runnable {
         teclado = new Teclado();
 
         tablero = new Tablero(this, teclado, pantalla);
+
         addKeyListener(teclado);
 
     }
@@ -58,7 +60,9 @@ public class Juego extends Canvas implements Runnable {
                 g.drawImage(render[y][x],x*48,y*48,null);
             }
         }
-        g.drawImage(Imagenes.playerDer, 1*48, 1*48, null);
+
+
+        g.drawImage(Imagenes.playerDer, tablero.xPlayer, tablero.yPlayer, null);
 
 
         g.dispose(); //release resources
@@ -127,7 +131,7 @@ public class Juego extends Canvas implements Runnable {
                 frame.setTiempo(tablero.restaTiempo());
                 frame.setPuntos(tablero.getPuntos());
                 frame.setVidas(tablero.getVidas());
-                System.out.println("fps:" + frames);
+                //System.out.println("fps:" + frames);
                 frames = 0;
                 timer = 0;
                 if(tablero.getPantallaMostar() == 2)
@@ -143,6 +147,7 @@ public class Juego extends Canvas implements Runnable {
         thread = new Thread(this);
         thread.start();
     }
+
     public synchronized void stop(){
         if (!corriendo)
             return;
