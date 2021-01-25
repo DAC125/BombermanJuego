@@ -45,6 +45,7 @@ public class Tablero {
         animDer = new Animacion(250,Imagenes.player_derecha);
     }
     public BufferedImage renderPlayer(){
+
         if (movimiento == 0){
             if (estado==1)
                 return Imagenes.playerDer;
@@ -57,6 +58,7 @@ public class Tablero {
         }
 
         if (movimiento == 1)
+
             return animDer.getCurrentFrame();
         if (movimiento == 2)
             return animAbajo.getCurrentFrame();
@@ -83,6 +85,7 @@ public class Tablero {
 
         movimiento = 0;
         if(teclado.derecha) {
+
             if (!colicion((xPlayer+48)/48, yPlayer/48)) {
                 xPlayer += 2;
                 movimiento = 1;

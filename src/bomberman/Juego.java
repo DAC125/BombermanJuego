@@ -19,6 +19,8 @@ public class Juego extends Canvas implements Runnable {
 
     private Thread thread;
 
+    public Sound sound;
+
     private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
     private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
 
@@ -32,6 +34,7 @@ public class Juego extends Canvas implements Runnable {
         teclado = new Teclado();
 
         tablero = new Tablero(this, teclado, pantalla);
+        sound = new Sound();
 
         addKeyListener(teclado);
 
@@ -39,6 +42,8 @@ public class Juego extends Canvas implements Runnable {
 
     private void init(){
         Imagenes.init();
+        sound.reproducirSonidoBG();
+
 
 
     }

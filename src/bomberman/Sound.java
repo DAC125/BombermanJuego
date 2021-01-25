@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class Sound {
 
-    public Sound(){}
+
 
     private void reproducirSonido(String nombreSonido, int loop){
         try {
@@ -23,14 +23,14 @@ public class Sound {
     }
 
     public void reproducirSonidoMuerte(){
-        reproducirSonido("resources/Sounds/Shot.wav",0);
+        reproducirSonido("res/sonidos/Muerte1.wav",0);
     }
 
     public void reproducirSonidoBG(){
-        reproducirSonido("resources/Sounds/HappyBirthday.wav",1);
+        reproducirSonido("res/sonidos/BG.wav",1);
     }
 
     public void reproducirSonidoExplosion(){
-        reproducirSonido("resources/Sounds/explosion.wav",0);
+        reproducirSonido("/Sounds/explosion.wav",0);
     }
 }
