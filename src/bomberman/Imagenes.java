@@ -5,6 +5,9 @@ import java.awt.image.BufferedImage;
 public class Imagenes {
 
     public static BufferedImage muroAcero, pasto, muroPiedra;;
+
+    public static BufferedImage globo;
+
     public static BufferedImage[] player_abajo;
     public static BufferedImage[] player_arriba;
     public static BufferedImage[] player_izquierda;
@@ -14,6 +17,7 @@ public class Imagenes {
     public static BufferedImage playerDer,playerArr,playerAbj,playerIzq;
 
     public static void init(){
+        //Carga imagenes para player detenido
         playerDer = CargaImagenes.cargaImagen("/texturas/BomberMan/BomberDer.png");
         playerAbj = CargaImagenes.cargaImagen("/texturas/BomberMan/BomberDown.png");
         playerIzq = CargaImagenes.cargaImagen("/texturas/BomberMan/BomberIzq.png");
@@ -43,6 +47,10 @@ public class Imagenes {
         muroAcero = CargaImagenes.cargaImagen("/texturas/Board/MuroAcero.png");
         pasto = CargaImagenes.cargaImagen("/texturas/Board/Fondo.png");
         muroPiedra = CargaImagenes.cargaImagen("/texturas/Board/Muro.png");
+
+        globo = CargaImagenes.cargaImagen("/texturas/Bomb/Bomb.png");
+
+
 
 
     }

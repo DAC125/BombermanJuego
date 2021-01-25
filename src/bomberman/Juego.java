@@ -43,6 +43,7 @@ public class Juego extends Canvas implements Runnable {
     private void init(){
         Imagenes.init();
         sound.reproducirSonidoBG();
+        Villano.init();
 
 
 
@@ -56,19 +57,22 @@ public class Juego extends Canvas implements Runnable {
 
         pantalla.limpiar();
 
-        BufferedImage render[][] = tablero.render(pantalla);
-
-
-
+        //renderiza el tablero || pasto, Muro Piedra, Muro Acero
+        BufferedImage render[][] = tablero.renderTablero();
         Graphics g = bs.getDrawGraphics();
-        for (int y = 0; y <13; y++) {
-            for (int x = 0; x < 31; x++) {
+        for (int y = 0; y <JuegoConfig.ANCHOMAPA; y++) {
+            for (int x = 0; x < JuegoConfig.LARGOMAPA; x++) {
                 g.drawImage(render[y][x],x*48,y*48,null);
             }
         }
 
-
+        //renderiza el player, BomberMan
         g.drawImage(tablero.renderPlayer(), tablero.xPlayer, tablero.yPlayer, null);
+
+        //renderiza los villanos
+        for (int x = 0; x<tablero.nivel.getEnemigos().size();x++) {
+            g.drawImage(tablero.renderVillano(x).getAnimacion(), tablero.renderVillano(x).getY()*48, tablero.renderVillano(x).getX()*48, null);
+        }
 
 
         g.dispose(); //release resources

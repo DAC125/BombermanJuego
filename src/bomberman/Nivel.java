@@ -70,6 +70,7 @@ public class Nivel {
                 }
             }
         }
+        board[1][1]='B';
         return board;
     }
     private ArrayList<Villano> colocarEnemigos(){
@@ -169,6 +170,11 @@ public class Nivel {
     public char[][] getMapa() {
         return mapa;
     }
+    public void setMapaMov(int x, int y,int xp,int yp){
+        char aux = mapa[y][x];
+        mapa[y][x]=' ';
+        mapa[yp][xp]= aux;
+    }
 
     public int getNivel() {
         return nivel;
@@ -176,5 +182,9 @@ public class Nivel {
 
     public ArrayList<Villano> getEnemigos() {
         return enemigos;
+    }
+
+    public Villano getEnemigoEspecifico(int index){
+        return enemigos.get(index);
     }
 }

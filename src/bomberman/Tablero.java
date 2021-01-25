@@ -34,7 +34,7 @@ public class Tablero {
         animIzq.tick();
         animArr.tick();
         actualizaPlayer();
-        System.out.println("x:"+xPlayer/48+" y:"+yPlayer/48);
+        //System.out.println("x:"+xPlayer/48+" y:"+yPlayer/48);
         //nivel.imprimir(nivel.getMapa());
 
     }
@@ -58,7 +58,6 @@ public class Tablero {
         }
 
         if (movimiento == 1)
-
             return animDer.getCurrentFrame();
         if (movimiento == 2)
             return animAbajo.getCurrentFrame();
@@ -67,14 +66,18 @@ public class Tablero {
         if (movimiento == 4)
             return animArr.getCurrentFrame();
 
-
-
         return null;
+    }
+
+    public Villano renderVillano(int index){
+        Villano villano = nivel.getEnemigoEspecifico(index);
+        return villano;
+
     }
 
     public boolean colicion(int x, int y){
         char[][] mapa = nivel.getMapa();
-        if (mapa[y][x]==' '){
+        if (mapa[y][x]==' '||mapa[y][x]=='B'){
             return false;
         }else{
             return true;
@@ -84,8 +87,8 @@ public class Tablero {
     private void actualizaPlayer(){
 
         movimiento = 0;
+        char[][] mapa = nivel.getMapa();
         if(teclado.derecha) {
-
             if (!colicion((xPlayer+48)/48, yPlayer/48)) {
                 xPlayer += 2;
                 movimiento = 1;
@@ -93,6 +96,10 @@ public class Tablero {
               movimiento = 0;
             }
             estado = 1;
+            if (mapa[yPlayer/48][xPlayer/48]!='B'){
+                nivel.setMapaMov((xPlayer-2)/48,yPlayer/48,xPlayer/48, yPlayer/48);
+            }
+
         }
 
         if (teclado.abajo){
@@ -103,6 +110,9 @@ public class Tablero {
                 movimiento = 0;
             }
             estado=2;
+            if (mapa[yPlayer/48][xPlayer/48]!='B'){
+                nivel.setMapaMov(xPlayer/48,(yPlayer-2)/48,xPlayer/48, yPlayer/48);
+            }
         }
 
         if(teclado.izquierda) {
@@ -112,34 +122,34 @@ public class Tablero {
             }else{
                 movimiento = 0;
             }
-
             estado=3;
+            if (mapa[yPlayer/48][xPlayer/48]!='B'){
+                nivel.setMapaMov((xPlayer+2)/48,yPlayer/48,xPlayer/48, yPlayer/48);
+            }
         }
+
         if (teclado.arriba) {
             if (!colicion((xPlayer)/48, (yPlayer-2)/48)) {
                 yPlayer -= 2;
                 movimiento = 4;
             }
             estado=4;
+            if (mapa[yPlayer/48][xPlayer/48]!='B'){
+                nivel.setMapaMov(xPlayer/48,(yPlayer+2)/48,xPlayer/48, yPlayer/48);
+            }
         }
-
-
 
     }
 
-    public BufferedImage[][] render(Pantalla pantalla) {
+    public BufferedImage[][] renderTablero() {
         if( juego.estaPausado()) return null;
 
-        //only render the visible part of screen
-        int x0 = Pantalla.xOffset >> 4; //tile precision, -> left X
-        int x1 = (Pantalla.xOffset + pantalla.getLargo() + JuegoConfig.TAMAÑO_BLOQUE) / JuegoConfig.TAMAÑO_BLOQUE; // -> right X
-        int y0 = Pantalla.yOffset >> 4;
-        int y1 = (Pantalla.yOffset + pantalla.getAncho()) / JuegoConfig.TAMAÑO_BLOQUE; //render one tile plus to fix black margins
 
         char[][] mapa = nivel.getMapa();
         BufferedImage entidades[][] = new BufferedImage[13][31];
-        for (int y = 0; y <13; y++){
-            for (int x = 0; x < 31; x++){
+
+        for (int y = 0; y <JuegoConfig.ANCHOMAPA; y++){
+            for (int x = 0; x < JuegoConfig.LARGOMAPA; x++){
                 switch (mapa[y][x]){
                     case 'X':
                         entidades[y][x]=Imagenes.muroAcero;
@@ -157,10 +167,9 @@ public class Tablero {
                 }
             }
         }
+
         return entidades;
-        /*
-        renderBombs(screen);
-        renderMobs(screen);*/
+
 
     }
 
@@ -169,7 +178,7 @@ public class Tablero {
     public void cambiarNivel(int lvl){
         tiempo = JuegoConfig.TIEMPO;
         pantallaMostar = 2;
-        nivel = new Nivel(13, 31, 25, lvl, JuegoConfig.numVillanos);
+        nivel = new Nivel(JuegoConfig.ANCHOMAPA, JuegoConfig.LARGOMAPA, JuegoConfig.probMuro, lvl, JuegoConfig.numVillanos);
         nivel.imprimir(nivel.getMapa());
 
     }
@@ -213,7 +222,4 @@ public class Tablero {
             return this.tiempo--;
     }
 
-    public void setMovimiento(int estado){
-        movimiento = estado;
-    }
 }

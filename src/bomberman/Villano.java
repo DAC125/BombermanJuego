@@ -1,13 +1,16 @@
 package bomberman;
 
+import java.awt.image.BufferedImage;
+
 public class Villano {
     private float velocidad;
     private int puntaje;
     private int inteligencia;
     private int muros;
-    private int nivel;
+    private static int nivel;
     private int x;
     private int y;
+    public static BufferedImage animacion;
 
 
     public Villano(int nivel, int x, int y){
@@ -19,7 +22,15 @@ public class Villano {
         this.puntaje = (int)parametros[3];
         this.x = x;
         this.y = y;
+
         System.out.println("Nivel = " +this.nivel+ " Velocidad = " +this.velocidad+ " Muros = "+this.muros+ " Inteligencia = "+this.inteligencia + " Puntaje = " +this.puntaje+" PosX = "+this.x+" PosY = "+this.y);
+    }
+
+    public static void init(){
+        switch (nivel){
+            case 1:
+                animacion = Imagenes.globo;
+        }
     }
 
     private float[] clasificacion(int nivel){
@@ -34,5 +45,23 @@ public class Villano {
         }else{
             return ParametrosVillanos.niv14;
         }
+    }
+
+
+
+    public int getNivel() {
+        return nivel;
+    }
+
+    public static BufferedImage getAnimacion() {
+        return animacion;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 }
