@@ -13,7 +13,7 @@ public class Frame extends JFrame {
 
     public Frame(){
 
-
+        JuegoConfig.Leertxt();
         containerpane = new JPanel(new BorderLayout());
         panelJuego = new PanelJuego(this);
         panelInfo = new PanelInfo(panelJuego.getJuego());

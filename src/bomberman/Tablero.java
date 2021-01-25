@@ -90,7 +90,7 @@ public class Tablero {
         char[][] mapa = nivel.getMapa();
         if(teclado.derecha) {
             if (!colicion((xPlayer+48)/48, yPlayer/48)) {
-                xPlayer += 2;
+                xPlayer += JuegoConfig.velocidadPlay;
                 movimiento = 1;
             }else{
               movimiento = 0;
@@ -104,7 +104,7 @@ public class Tablero {
 
         if (teclado.abajo){
             if (!colicion(xPlayer/48, (yPlayer+48)/48)){
-                yPlayer += 2;
+                yPlayer += JuegoConfig.velocidadPlay;
                 movimiento = 2;
             }else{
                 movimiento = 0;
@@ -117,7 +117,7 @@ public class Tablero {
 
         if(teclado.izquierda) {
             if (!colicion((xPlayer-2)/48, (yPlayer)/48)){
-                xPlayer -= 2;
+                xPlayer -= JuegoConfig.velocidadPlay;
                 movimiento=3;
             }else{
                 movimiento = 0;
@@ -130,7 +130,7 @@ public class Tablero {
 
         if (teclado.arriba) {
             if (!colicion((xPlayer)/48, (yPlayer-2)/48)) {
-                yPlayer -= 2;
+                yPlayer -= JuegoConfig.velocidadPlay;
                 movimiento = 4;
             }
             estado=4;
