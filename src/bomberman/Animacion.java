@@ -2,12 +2,14 @@ package bomberman;
 
 import java.awt.image.BufferedImage;
 
+//clase encargada de devolver el sprite o imagen para de esta menera lograr crear el efecto
+//de caminar de los personajes
 public class Animacion {
     private   int speed, index;
     private long lastTime, timer;
-    private BufferedImage[] frames;
+    private BufferedImage[] frames;//guarda las diferentes imagenes de dirección
 
-
+    //Constructor de la clase
     public Animacion(int speed, BufferedImage[] frames){
         this.speed = speed;
         this.frames = frames;
@@ -16,6 +18,8 @@ public class Animacion {
         lastTime = System.currentTimeMillis();
     }
 
+
+    //actualiza el indice de la imagen
     public void tick(){
         timer += System.currentTimeMillis() - lastTime;
         lastTime = System.currentTimeMillis();
@@ -27,9 +31,9 @@ public class Animacion {
                 index = 0;
         }
     }
+
     public BufferedImage getCurrentFrame(){
         return frames[index];
     }
-
 
 }
