@@ -1,19 +1,23 @@
 package bomberman;
+
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
+//Esta clase se encarga de correr el while principal del Juego
+//Donde todo se va a actualizar, ademas de inicializar todo lo referente a entrada por teclado y sonidos
+//del juego
 public class Juego extends Canvas implements Runnable {
 
     private Frame frame;
     private JuegoConfig config;
-    private Teclado teclado;
+    private Teclado teclado;//Encagado de recibir entrada por teclado del jugador
 
     private boolean corriendo = false;
     private boolean pausa = true;
 
-    private Tablero tablero;
+    private Tablero tablero;//Información de donde se encuentra todo en el backend
     private Pantalla pantalla;
     private int delayTempLvl = config.DELAYTEMPLVL;
 
@@ -24,8 +28,7 @@ public class Juego extends Canvas implements Runnable {
     private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
     private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
 
-
-
+    //Constructor de la clase, Inicializa el Juego
     public Juego(Frame frame){
         this.frame = frame;
         frame.setTitle("Bomberman");
@@ -41,13 +44,12 @@ public class Juego extends Canvas implements Runnable {
     }
 
     private void init(){
-        Imagenes.init();
-        sound.reproducirSonidoBG();
-        Villano.init();
-
-
-
+        Imagenes.init();//Carga las imágenes
+        sound.reproducirSonidoBG();//reeproduce el sonido de Fondo
+        Villano.init();//Inicializa los villanos
     }
+
+    //renderuiza en pantalla el juego en sí
     private void renderJuego(){
         BufferStrategy bs = getBufferStrategy();
         if(bs == null) {
@@ -75,11 +77,12 @@ public class Juego extends Canvas implements Runnable {
         }
 
 
-        g.dispose(); //release resources
-        bs.show(); //make next buffer visible
+        g.dispose(); //Libera recursos
+        bs.show(); //Hace el siguiente Buffer Visible
     }
 
-    private void renderPantalla() { //TODO: merge these render methods
+    //Limpia la pantalla, para posteriormente volver a dibujar en ella
+    private void renderPantalla() {
         BufferStrategy bs = getBufferStrategy();
         if(bs == null) {
             createBufferStrategy(3);
@@ -97,12 +100,15 @@ public class Juego extends Canvas implements Runnable {
         bs.show();
     }
 
+    //Actualiza las entradas por teclado y el tablero o matriz del juego
     private void actualizar() {
         teclado.actualiza();
         tablero.actualiza();
     }
 
 
+    //Game loop, el ciclo principal del juego, para que este siga corriendo y actualizando todo lo necesario
+    //Se vuelve a pasar por el ciclo una y otra vez, hasta que de alguna manera este se detenga
     @Override
     public void run() {
         init();
@@ -122,12 +128,15 @@ public class Juego extends Canvas implements Runnable {
             timer += tiempoAhora - tiempoUltimo;
             tiempoUltimo = tiempoAhora;
 
+            //se actualiza cada x tiempo
             if (delta >= 1){
                 actualizar();
                 frames++;
                 delta--;
             }
 
+            //Si está en pausa no es necesario estar actualizando todo una y otra vez
+            //Si no se renderiza
             if(pausa){
                 if (delayTempLvl <= 0){
                     tablero.setPantallaMostar(-1);
@@ -151,6 +160,7 @@ public class Juego extends Canvas implements Runnable {
         }
     }
 
+    //Inicializa el hilo principal del Juego
     public synchronized void start(){
         if (corriendo)
             return;
@@ -159,6 +169,7 @@ public class Juego extends Canvas implements Runnable {
         thread.start();
     }
 
+    //detiene el hilo principal del Juego
     public synchronized void stop(){
         if (!corriendo)
             return;
@@ -177,9 +188,11 @@ public class Juego extends Canvas implements Runnable {
     public boolean estaPausado(){
         return pausa;
     }
+
     public boolean estaCoriendo(){
         return corriendo;
     }
+
     public Tablero getTablero(){
         return tablero;
     }
