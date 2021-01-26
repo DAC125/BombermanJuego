@@ -1,5 +1,9 @@
 package bomberman;
 
+//Posee la "configuración" de cada tipo de villano
+//El nombre de la variable es el nivel en el que aparece el villano
+//{X,Y,I,J} = {Velocidad, AtraviesaMuros, nivelIA, PuntosMorir}
+//Notas: velocidad respecto al jugador
 public interface ParametrosVillanos {
     float[] niv1 = {0.66f,0,0,100};
     float[] niv2 = {1,0,0,200};
