@@ -12,7 +12,8 @@ public class Villano implements ParametrosVillanos {
 
     public Villano(int nivel, int x, int y){
         float[] parametros = clasificacion(nivel);
-        this.nivel = nivel;
+        //System.out.println(nivel);
+        this.nivel =(int) parametros[4];
         this.velocidad = parametros[0];
         this.muros = (int)parametros[1];
         this.inteligencia = (int)parametros[2];
@@ -22,9 +23,21 @@ public class Villano implements ParametrosVillanos {
         System.out.println("Nivel = " +this.nivel+ " Velocidad = " +this.velocidad+ " Muros = "+this.muros+ " Inteligencia = "+this.inteligencia + " Puntaje = " +this.puntaje+" PosX = "+this.x+" PosY = "+this.y);
     }
 
+    public int getNivel(){
+        return this.nivel;
+    }
+    public int getX(){
+        return this.x;
+    }
+    public int getY(){
+        return this.y;
+    }
+
     private float[] clasificacion(int nivel){
         if(nivel>=1 && nivel<=3){
             return ParametrosVillanos.primeros[nivel-1];
+        }else if(nivel>3 && nivel<6){
+            return ParametrosVillanos.primeros[2];
         }else if(nivel>=6 && nivel<8){
             return ParametrosVillanos.niv6;
         }else if(nivel>=8 && nivel<11){

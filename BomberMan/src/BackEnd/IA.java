@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class IA {
+public class IA implements ParametrosMapa{
     private Board mapa;
     ArrayList<int[]> movimientosRand = new ArrayList<>();
 
@@ -56,7 +56,7 @@ public class IA {
             int[] prueba = this.movimientosRand.get(rand);
             int a = prueba[0];
             int b = prueba[1];
-            if(this.mapa.tablero[a+x][b+y] != '_' && this.mapa.tablero[a+x][b+y] != 'X'){
+            if(this.mapa.tablero[a+x][b+y] != Muralla && this.mapa.tablero[a+x][b+y] != Acero){
                 res[0] = a+x;
                 res[1] = b+y;
                 flag = 1;
@@ -73,7 +73,7 @@ public class IA {
             int i;
             if(by>posy){
                 for(i = posy+1; i<by;i++) {
-                    if (this.mapa.tablero[posx][i] == '_' || this.mapa.tablero[posx][i] == 'X') {
+                    if (this.mapa.tablero[posx][i] == Muralla || this.mapa.tablero[posx][i] == Acero) {
                         System.out.println("RANDOM en x");
                         return GenRandom(posx,posy);
                     }
@@ -83,7 +83,7 @@ public class IA {
                 return res;
             }else{
                 for(i = posy-1; i>by;i--) {
-                    if (this.mapa.tablero[posx][i] == '_' || this.mapa.tablero[posx][i] == 'X') {
+                    if (this.mapa.tablero[posx][i] == Muralla || this.mapa.tablero[posx][i] == Acero) {
                         System.out.println("RANDOM en x");
                         return GenRandom(posx,posy);
                     }
@@ -97,7 +97,7 @@ public class IA {
             int i;
             if(bx>posx){
                 for(i = posx+1; i<bx;i++) {
-                    if (this.mapa.tablero[i][posy] == '_' || this.mapa.tablero[i][posy] == 'X') {
+                    if (this.mapa.tablero[i][posy] == Muralla || this.mapa.tablero[i][posy] == Acero) {
                         System.out.println("RANDOM en y");
                         return GenRandom(posx,posy);
                     }
@@ -107,7 +107,7 @@ public class IA {
                 return res;
             }else{
                 for(i = posx-1; i>bx;i--) {
-                    if (this.mapa.tablero[i][posy] == '_' || this.mapa.tablero[i][posy] == 'X') {
+                    if (this.mapa.tablero[i][posy] == Muralla || this.mapa.tablero[i][posy] == Acero) {
                         System.out.println("RANDOM en y");
                         return GenRandom(posx,posy);
                     }
@@ -186,14 +186,14 @@ public class IA {
 
 
     public void animarTemp(int bx, int by, int pEx, int pEy){//funcion temporal que grafica el mapa del juego y sirve para probar las IAs, tiene un delay de 1s por cada iteracion
-        this.mapa.tablero[bx][by] = 'B';
+        this.mapa.tablero[bx][by] = Bomberman;
         boolean igual = false;
         while(igual == false){
             if(bx==pEx && by == pEy){
                 igual = true;
             }
             try {
-                this.mapa.tablero[pEx][pEy] = ' ';
+                this.mapa.tablero[pEx][pEy] = Vacio;
                 int[] pos = nivel3(bx,by,pEx,pEy);
                 this.mapa.tablero[pos[0]][pos[1]] = '*';
                 TimeUnit.SECONDS.sleep(1);
@@ -206,20 +206,4 @@ public class IA {
             }
         }System.out.println(pEx+", "+pEy);
     }
-
-    /*public ArrayList<int[]> rutaCorta(int bx, int by, int pEx, int pEy){
-        ArrayList<int[]> res = new ArrayList<>();
-        rutaCortaAux(bx, by, pEx+1,pEy,res);
-        rutaCortaAux(bx, by, pEx-1,pEy,res);
-        rutaCortaAux(bx, by, pEx,pEy+1,res);
-        rutaCortaAux(bx, by, pEx,pEy-1,res);
-        int costo = 0;
-        int ganador = 0;
-    }
-
-    private ArrayList<int[]> rutaCortaAux(int bx, int by, int pEx, int pEy,ArrayList<int[]> acum) {
-        if (this.mapa.tablero[pEx][pEy] != '_' || this.mapa.tablero[pEx][pEy] != 'X') {
-            
-        }
-    }*/
 }

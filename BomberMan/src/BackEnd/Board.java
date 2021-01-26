@@ -1,9 +1,12 @@
 package BackEnd;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
+import Enemigos.ParametrosVillanos;
 import Enemigos.Villano;
 
-public class Board {
+public class Board implements ParametrosMapa {
     public char tablero[][];
     private int largo;
     private int ancho;
@@ -48,23 +51,23 @@ public class Board {
             for(int j = 0; j < a; j++) {
                 if(j == 0 || j == a-1 || i == 0 || i == l-1 ) {
                     Node nuevo = new Node(i,j);
-                    board[i][j] = 'X';
+                    board[i][j] = Acero;
                     this.obstaculos.add(nuevo);
                 }else if(j%2 == 0 && i%2 == 0){
                     Node nuevo = new Node(i,j);
-                    board[i][j] = 'X';
+                    board[i][j] = Acero;
                     this.obstaculos.add(nuevo);
                 }else{
                     if(i<=3 && j<=3){
-                        board[i][j] = ' ';
+                        board[i][j] = Vacio;
                     }else{
                         double rand = Math.random();
                         if(rand<=this.proba){
-                            board[i][j] = '_';
+                            board[i][j] = Muralla;
                             Node nuevo = new Node(i,j);
                             this.obstaculos.add(nuevo);
                         }else{
-                            board[i][j] = ' ';
+                            board[i][j] = Vacio;
                         }
                     }
                 }
@@ -78,11 +81,11 @@ public class Board {
         while(temp!=0){
             int xRand = getRandomNumber(0,this.largo);
             int yRand = getRandomNumber(0,this.ancho);
-            if( this.tablero[xRand][yRand] == ' ' && xRand>3 && yRand>3){
+            if( this.tablero[xRand][yRand] == Vacio && xRand>3 && yRand>3){
                 int rand = (int)(Math.random()*100);
                 int nivel = seleccionarEnemigo(this.probabilidadesEnemigos,rand);
-                char enemigo  = (char)(96 + nivel);
                 Villano nuevo = new Villano(nivel,xRand,yRand);
+                char enemigo  = (char)(96 + nuevo.getNivel());
                 lista.add(nuevo);
                 this.tablero[xRand][yRand] = enemigo;
                 temp--;
@@ -112,9 +115,19 @@ public class Board {
     public int[][] calcularProbabilidades(){
         double[] pruebas = new double[this.nivel-1];
         for(int i = 1;i<this.nivel;i++){
-            //System.out.println(i);
-            pruebas[i-1] = distribucionEnemigos(i,this.numVill);
-            //ystem.out.println(pruebas[i-1]);
+            if(nivel>=1 && nivel<=3){
+                pruebas[i-1] = distribucionEnemigos(i,nivel);
+            }else if(nivel>3 && nivel<6){
+                pruebas[i-1] = distribucionEnemigos(i,3);
+            }else if(nivel>=6 && nivel<8){
+                pruebas[i-1] = distribucionEnemigos(i,4);
+            }else if(nivel>=8 && nivel<11){
+                pruebas[i-1] = distribucionEnemigos(i,5);
+            }else if(nivel>=11 && nivel<14){
+                pruebas[i-1] = distribucionEnemigos(i,6);
+            }else{
+                pruebas[i-1] = distribucionEnemigos(i,7);
+            }
         }
         return crearMatrizProba(pruebas);
     }
@@ -141,7 +154,7 @@ public class Board {
     private double distribucionEnemigos(int level,int numVill){
         double e = Math.exp(1);
         double res = ((Math.pow(e,(-1 * level))*Math.pow(level,numVill))/(factorial(numVill)));
-        //System.out.println(res);
+        System.out.println(res);
         return res;
     }
 
@@ -153,17 +166,91 @@ public class Board {
         }
         return fact;
     }
-    public void eliminarMuro(int x, int y){ //PROBAAAAAR!!!!!!
-        int buscar[] = new int[2];
-        buscar[0] = x;
-        buscar[1] = y;
-        int index = this.obstaculos.indexOf(buscar);
-        if(index != 0){
-            this.obstaculos.remove(index);
-            this.tablero[x][y] = ' ';
-        }else{
-            System.out.println("No");
+    public void explotar(ArrayList<int[]> detonacion) throws InterruptedException {
+        //TimeUnit.SECONDS.sleep(tiempoBomba);
+        int maxX = detonacion.get(detonacion.size()-4)[0]+1;
+        int maxY = detonacion.get(detonacion.size()-3)[1]+1;
+        int minY = detonacion.get(detonacion.size()-1)[1]-1;
+        int minX = detonacion.get(detonacion.size()-2)[0]-1;
+        for(int i = 0; i<detonacion.size();i++){
+            int x = detonacion.get(i)[0];
+            int y = detonacion.get(i)[1];
+            //detonacion.get(detonacion.size()-4)[0]
+            if(x>0 && y>0){
+                if(this.tablero[x][y] == Acero || this.tablero[x][y] == Muralla){
+                    //System.out.println("Obstaculo: " +x + ", " + y);
+                    if(x>detonacion.get(0)[0] && y==detonacion.get(0)[1]){
+                        maxX = x;
+                        if(this.tablero[x][y] == Muralla){
+                            System.out.println("Muro: " +x + ", " + y);
+                            eliminarMuro(x,y);
+                        }
+                        //System.out.println("Xmax = " + maxX);
+                    }else if(x<detonacion.get(0)[0] && y==detonacion.get(0)[1]){
+                        minX = x;
+                        if(this.tablero[x][y] == Muralla){
+                            System.out.println("Muro: " +x + ", " + y);
+                            eliminarMuro(x,y);
+                        }
+                        //System.out.println("Xmin = " + minX);
+                    }else if(y>detonacion.get(0)[1] && x==detonacion.get(0)[0]){
+                        maxY = y;
+                        if(this.tablero[x][y] == Muralla){
+                            System.out.println("Muro: " +x + ", " + y);
+                            eliminarMuro(x,y);
+                        }
+                       //System.out.println("Ymax = " + maxY);
+                    }else if(y<detonacion.get(0)[1] && x==detonacion.get(0)[0]){
+                        minY = y;
+                        if(this.tablero[x][y] == Muralla){
+                            System.out.println("Muro: " +x + ", " + y);
+                            eliminarMuro(x,y);
+                        }
+                        //System.out.println("Ymin = " + minY);
+                    }
+                }
+
+            }
+
         }
+        for(int i = 0; i<detonacion.size();i++){
+            int x = detonacion.get(i)[0];
+            int y = detonacion.get(i)[1];
+            if(x>0 && y>0){
+                if(this.tablero[x][y] != Acero && x>minX && x<maxX && y>minY && y<maxY){
+                    if(this.tablero[x][y]!=' '){
+                        System.out.println("Enemigo: " +x + ", " + y);
+                        eliminarEnemigos(x,y);
+                    }
+                    this.tablero[x][y] = Explosion;
+                }
+            }
+        }imprimir(this.tablero);
+    }
+    public void eliminarMuro(int x, int y){
+        int buscar[] = new int[2];
+        for (int i = 0;i<obstaculos.size();i++){
+            if(obstaculos.get(i).getCol() == y && obstaculos.get(i).getRow() == x){
+                this.obstaculos.remove(i);
+                System.out.println("Se elimino Muralla en " + x + ", "+y);
+                this.tablero[x][y] = Vacio;
+            }
+        }
+
+
+    }
+
+    public void eliminarEnemigos(int x, int y){
+        int buscar[] = new int[2];
+        for (int i = 0;i<enemigos.size();i++){
+            if(enemigos.get(i).getY() == y && enemigos.get(i).getX() == x){
+                this.enemigos.remove(i);
+                System.out.println("Se elimino un Villano en " + x + ", "+y);
+                this.tablero[x][y] = 'D';
+            }
+        }
+
+
     }
 
 }
