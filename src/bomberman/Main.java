@@ -2,8 +2,9 @@ package bomberman;
 
 public class Main {
     public static void main(String[] args) {
-        //CargaImagenes carga = new CargaImagenes("res/Board/MuroAcero.png");
+        //Clase principal, la que es llamada apenas se inicia la aplicación
          new Frame();
+
         //JuegoConfig.Leertxt();
         //System.out.println(JuegoConfig.ANCHO);
 
