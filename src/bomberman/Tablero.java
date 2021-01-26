@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 //Clase encargada de manejar todo lo relacionado al tablero, que es la representación de lo que está en pantalla
-public class Tablero {
+public class Tablero implements ParametrosMapa{
     protected Nivel nivel;//Nivel actual del Juego
     protected Juego juego;
     protected Teclado teclado;
@@ -87,7 +87,7 @@ public class Tablero {
     //detecta posiciones en el tablero de "char" para saber si las entidades se pueden seguir moviendo en x dirección
     public boolean colicion(int x, int y){
         char[][] mapa = nivel.getMapa();
-        if (mapa[y][x]==' '||mapa[y][x]=='B'){//Si choca con algo, quiere decir que no puede pasar
+        if (mapa[y][x]==Vacio||mapa[y][x]==Bomberman){//Si choca con algo, quiere decir que no puede pasar
             return false;
         }else{
             return true;
@@ -108,7 +108,7 @@ public class Tablero {
               movimiento = 0;
             }
             estado = 1;
-            if (mapa[yPlayer/48][xPlayer/48]!='B'){
+            if (mapa[yPlayer/48][xPlayer/48]!=Bomberman){
                 nivel.setMapaMov((xPlayer-2)/48,yPlayer/48,xPlayer/48, yPlayer/48);
             }
 
@@ -122,7 +122,7 @@ public class Tablero {
                 movimiento = 0;
             }
             estado=2;
-            if (mapa[yPlayer/48][xPlayer/48]!='B'){
+            if (mapa[yPlayer/48][xPlayer/48]!=Bomberman){
                 nivel.setMapaMov(xPlayer/48,(yPlayer-2)/48,xPlayer/48, yPlayer/48);
             }
         }
@@ -135,7 +135,7 @@ public class Tablero {
                 movimiento = 0;
             }
             estado=3;
-            if (mapa[yPlayer/48][xPlayer/48]!='B'){
+            if (mapa[yPlayer/48][xPlayer/48]!=Bomberman){
                 nivel.setMapaMov((xPlayer+2)/48,yPlayer/48,xPlayer/48, yPlayer/48);
             }
         }
@@ -146,7 +146,7 @@ public class Tablero {
                 movimiento = 4;
             }
             estado=4;
-            if (mapa[yPlayer/48][xPlayer/48]!='B'){
+            if (mapa[yPlayer/48][xPlayer/48]!=Bomberman){
                 nivel.setMapaMov(xPlayer/48,(yPlayer+2)/48,xPlayer/48, yPlayer/48);
             }
         }
@@ -164,14 +164,35 @@ public class Tablero {
         for (int y = 0; y <JuegoConfig.ANCHOMAPA; y++){
             for (int x = 0; x < JuegoConfig.LARGOMAPA; x++){
                 switch (mapa[y][x]){
-                    case 'X':
+                    case Acero:
                         entidades[y][x]=Imagenes.muroAcero;
                         break;
-                    case ' ':
+                    case Vacio:
                         entidades[y][x]=Imagenes.pasto;
                         break;
-                    case '_':
+                    case Muralla:
                         entidades[y][x]=Imagenes.muroPiedra;
+                        break;
+                    case Globo:
+                        entidades[y][x]=Imagenes.globo;
+                        break;
+                    case Haki:
+                        entidades[y][x]=Imagenes.haki;
+                        break;
+                    case Cel:
+                        entidades[y][x]=Imagenes.cel;
+                        break;
+                    case Espon:
+                        entidades[y][x]=Imagenes.espon;
+                        break;
+                    case Fant:
+                        entidades[y][x]=Imagenes.fant;
+                        break;
+                    case Mon:
+                        entidades[y][x]=Imagenes.mon;
+                        break;
+                    case MonG:
+                        entidades[y][x]=Imagenes.mong;
                         break;
                     default:
                         entidades[y][x]=Imagenes.pasto;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 //Esta clase se encarga de cargar cada nivel del mapa
 //crea el tablero de juego, coloca enemigos y elije que enemigos poner, así como calcula la probabilidades de cada clase de enemigo
-public class Nivel {
+public class Nivel implements ParametrosMapa{
     public char mapa[][];
     private int largo;
     private int ancho;
@@ -55,44 +55,43 @@ public class Nivel {
             for(int j = 0; j < a; j++) {
                 if(j == 0 || j == a-1 || i == 0 || i == l-1 ) {
                     Node nuevo = new Node(i,j);
-                    board[i][j] = 'X';
-                    this.obstaculos.add(nuevo);//se rellena una lista con los muros que se van colocando
+                    board[i][j] = Acero;
+                    this.obstaculos.add(nuevo);
                 }else if(j%2 == 0 && i%2 == 0){
                     Node nuevo = new Node(i,j);
-                    board[i][j] = 'X';
+                    board[i][j] = Acero;
                     this.obstaculos.add(nuevo);
                 }else{
                     if(i<=3 && j<=3){
-                        board[i][j] = ' ';
+                        board[i][j] = Vacio;
                     }else{
                         double rand = Math.random();
-                        if(rand<=this.proba){//prob según archivo de configuración
-                            board[i][j] = '_';
+                        if(rand<=this.proba){
+                            board[i][j] = Muralla;
                             Node nuevo = new Node(i,j);
                             this.obstaculos.add(nuevo);
                         }else{
-                            board[i][j] = ' ';
+                            board[i][j] = Vacio;
                         }
                     }
                 }
             }
         }
-        board[1][1]='B';//Se coloca el bomberman
+        board[1][1] = Bomberman;
         return board;
     }
-
     //Método que se encarga de rellenar el mapa con el Número de enemigos que se indica en el archivo de conf
     private ArrayList<Villano> colocarEnemigos(){
-        ArrayList<Villano> lista = new ArrayList<>();//Una lista con objetos del tipo villano que se van a tener en el mapa
-        int temp = this.numVill;//Número de villanos a colocar
+        ArrayList<Villano> lista = new ArrayList<>();
+        int temp = this.numVill;
         while(temp!=0){
-            int xRand = getRandomNumber(0,this.largo);//pos a colocar el enemigo en rand
+            int xRand = getRandomNumber(0,this.largo);
             int yRand = getRandomNumber(0,this.ancho);
-            if( this.mapa[xRand][yRand] == ' ' && xRand>3 && yRand>3){
+            if( this.mapa[xRand][yRand] == Vacio && xRand>3 && yRand>3){
                 int rand = (int)(Math.random()*100);
-                int nivel = seleccionarEnemigo(this.probabilidadesEnemigos,rand);//Elije el tipo de enemigo a colocar
-                Villano nuevo = new Villano(nivel,xRand,yRand, this);
-                char enemigo  = (char)(96 +nuevo.getNivel());
+                int nivel = seleccionarEnemigo(this.probabilidadesEnemigos,rand);
+                Villano nuevo = new Villano(nivel,xRand,yRand,this);
+                char enemigo  = (char)(96 + nuevo.getNivel());
                 lista.add(nuevo);
                 this.mapa[xRand][yRand] = enemigo;
                 temp--;
@@ -184,20 +183,92 @@ public class Nivel {
         return fact;
     }
 
-    //dado un X y un Y, si ese x,y es un obstaculo, se elimina
-    public void eliminarMuro(int x, int y){ //PROBAAAAAR!!!!!!
-        int buscar[] = new int[2];
-        buscar[0] = x;
-        buscar[1] = y;
-        int index = this.obstaculos.indexOf(buscar);
-        if(index != 0){
-            this.obstaculos.remove(index);
-            this.mapa[x][y] = ' ';
-        }else{
-            System.out.println("No");
+    public void explotar(ArrayList<int[]> detonacion) throws InterruptedException {
+        //TimeUnit.SECONDS.sleep(tiempoBomba);
+        int maxX = detonacion.get(detonacion.size()-4)[0]+1;
+        int maxY = detonacion.get(detonacion.size()-3)[1]+1;
+        int minY = detonacion.get(detonacion.size()-1)[1]-1;
+        int minX = detonacion.get(detonacion.size()-2)[0]-1;
+        for(int i = 0; i<detonacion.size();i++){
+            int x = detonacion.get(i)[0];
+            int y = detonacion.get(i)[1];
+            //detonacion.get(detonacion.size()-4)[0]
+            if(x>0 && y>0){
+                if(this.mapa[x][y] == Acero || this.mapa[x][y] == Muralla){
+                    //System.out.println("Obstaculo: " +x + ", " + y);
+                    if(x>detonacion.get(0)[0] && y==detonacion.get(0)[1]){
+                        maxX = x;
+                        if(this.mapa[x][y] == Muralla){
+                            System.out.println("Muro: " +x + ", " + y);
+                            eliminarMuro(x,y);
+                        }
+                        //System.out.println("Xmax = " + maxX);
+                    }else if(x<detonacion.get(0)[0] && y==detonacion.get(0)[1]){
+                        minX = x;
+                        if(this.mapa[x][y] == Muralla){
+                            System.out.println("Muro: " +x + ", " + y);
+                            eliminarMuro(x,y);
+                        }
+                        //System.out.println("Xmin = " + minX);
+                    }else if(y>detonacion.get(0)[1] && x==detonacion.get(0)[0]){
+                        maxY = y;
+                        if(this.mapa[x][y] == Muralla){
+                            System.out.println("Muro: " +x + ", " + y);
+                            eliminarMuro(x,y);
+                        }
+                        //System.out.println("Ymax = " + maxY);
+                    }else if(y<detonacion.get(0)[1] && x==detonacion.get(0)[0]){
+                        minY = y;
+                        if(this.mapa[x][y] == Muralla){
+                            System.out.println("Muro: " +x + ", " + y);
+                            eliminarMuro(x,y);
+                        }
+                        //System.out.println("Ymin = " + minY);
+                    }
+                }
+
+            }
+
         }
+        for(int i = 0; i<detonacion.size();i++){
+            int x = detonacion.get(i)[0];
+            int y = detonacion.get(i)[1];
+            if(x>0 && y>0){
+                if(this.mapa[x][y] != Acero && x>minX && x<maxX && y>minY && y<maxY){
+                    if(this.mapa[x][y]!=' '){
+                        System.out.println("Enemigo: " +x + ", " + y);
+                        eliminarEnemigos(x,y);
+                    }
+                    this.mapa[x][y] = Explosion;
+                }
+            }
+        }imprimir(this.mapa);
+    }
+    public void eliminarMuro(int x, int y){
+        int buscar[] = new int[2];
+        for (int i = 0;i<obstaculos.size();i++){
+            if(obstaculos.get(i).getCol() == y && obstaculos.get(i).getRow() == x){
+                this.obstaculos.remove(i);
+                System.out.println("Se elimino Muralla en " + x + ", "+y);
+                this.mapa[x][y] = Vacio;
+            }
+        }
+
+
     }
 
+    public void eliminarEnemigos(int x, int y){
+        int buscar[] = new int[2];
+        for (int i = 0;i<enemigos.size();i++){
+            if(enemigos.get(i).getY() == y && enemigos.get(i).getX() == x){
+                this.enemigos.remove(i);
+                System.out.println("Se elimino un Villano en " + x + ", "+y);
+                this.mapa[x][y] = 'D';
+            }
+        }
+
+
+    }
     public char[][] getMapa() {
         return mapa;
     }

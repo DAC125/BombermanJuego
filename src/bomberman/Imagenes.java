@@ -9,6 +9,12 @@ public class Imagenes {
     public static BufferedImage muroAcero, pasto, muroPiedra;;
 
     public static BufferedImage globo;
+    public static BufferedImage cel;
+    public static BufferedImage espon;
+    public static BufferedImage fant;
+    public static BufferedImage haki;
+    public static BufferedImage mon;
+    public static BufferedImage mong;
 
     //Motivo de que sea arreglo: Lograr una animación de caminar, aunque este en la misma direcciónm
     public static BufferedImage[] player_abajo;
@@ -51,7 +57,13 @@ public class Imagenes {
         pasto = CargaImagenes.cargaImagen("/texturas/Board/Fondo.png");
         muroPiedra = CargaImagenes.cargaImagen("/texturas/Board/Muro.png");
 
-        globo = CargaImagenes.cargaImagen("/texturas/Bomb/Bomb.png");
+        globo = CargaImagenes.cargaImagen("/texturas/Enemies/Bomba.png");
+        cel = CargaImagenes.cargaImagen("/texturas/Enemies/Cel.png");
+        espon = CargaImagenes.cargaImagen("/texturas/Enemies/Espon.png");
+        fant = CargaImagenes.cargaImagen("/texturas/Enemies/Fant.png");
+        haki = CargaImagenes.cargaImagen("/texturas/Enemies/Haki.png");
+        mon = CargaImagenes.cargaImagen("/texturas/Enemies/Mon.png");
+        mong = CargaImagenes.cargaImagen("/texturas/Enemies/MonG.png");
 
 
 
