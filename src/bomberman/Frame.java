@@ -6,31 +6,34 @@ import javax.swing.JPanel;
 
 public class Frame extends JFrame {
 
-    public PanelJuego panelJuego;
-    private JPanel containerpane;
-    private PanelInfo panelInfo;
-    private Juego juego;
+    public PanelJuego panelJuego;//Contiene la parte gráfica del Juego en sí, donde se mueve Bomberman
+    private JPanel containerpane;//Contiene el área matricial del juego(panelJuego)
+                                // y la información del Juego(panelInfo)
+    private PanelInfo panelInfo;///información necesaria para el juego(puntos, vida,tiempo)
+    private Juego juego;//Todo lo necesario para que el juego funcione, el backend en sí
 
+    //Contiene todo lo gráfico y comienza el juego en sí
     public Frame(){
 
-        JuegoConfig.Leertxt();
+        JuegoConfig.Leertxt();//Lee el archivo de configuración del juego
         containerpane = new JPanel(new BorderLayout());
-        panelJuego = new PanelJuego(this);
-        panelInfo = new PanelInfo(panelJuego.getJuego());
+        panelJuego = new PanelJuego(this);//inicializa el panel del Juego
+        panelInfo = new PanelInfo(panelJuego.getJuego());//inicializa la información del juego
 
-        containerpane.add(panelInfo,BorderLayout.PAGE_START);
-        containerpane.add(panelJuego,BorderLayout.PAGE_END);
+        containerpane.add(panelInfo,BorderLayout.PAGE_START);//coloca los dos paneles
+        containerpane.add(panelJuego,BorderLayout.PAGE_END);//coloca los dos paneles
 
         juego = panelJuego.getJuego();
 
         add(containerpane);
 
-        setResizable(false);
+        setResizable(false);//no se puede cambiar el tamaño
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
 
+        //Inicia el Juego
         juego.start();
     }
     /*
@@ -38,6 +41,7 @@ public class Frame extends JFrame {
         juego.getTablero().nuevoJuego();
     }
 */
+    //indica al tablero que cambie de Nivel
     public void cambiarNivel(int i) {
         juego.getTablero().cambiarNivel(i);
     }
