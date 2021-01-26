@@ -2,12 +2,15 @@ package bomberman;
 
 import java.awt.image.BufferedImage;
 
+//clase encargada de cargar de memoria todas las imagenes necesitadas en el juego
+//Jugador, enemifo, muros, etc
 public class Imagenes {
 
     public static BufferedImage muroAcero, pasto, muroPiedra;;
 
     public static BufferedImage globo;
 
+    //Motivo de que sea arreglo: Lograr una animación de caminar, aunque este en la misma direcciónm
     public static BufferedImage[] player_abajo;
     public static BufferedImage[] player_arriba;
     public static BufferedImage[] player_izquierda;
