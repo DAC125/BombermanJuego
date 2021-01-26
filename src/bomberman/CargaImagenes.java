@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+//CLASE encargada de cargar una imagen en un BufferedImage dada una dirección
+//clase usada en Imagenes para cargar las imagenes del juego
 public class CargaImagenes {
 
     public static BufferedImage cargaImagen(String ruta){
