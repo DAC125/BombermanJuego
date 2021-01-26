@@ -2,19 +2,21 @@ package bomberman;
 
 import java.awt.image.BufferedImage;
 
+//Clase que posee todos los metodos y atribuitos necesarios para el manejo de cualquier villano
 public class Villano {
     private static IA ia;
-    private float velocidad;
-    private int puntaje;
-    private int inteligencia;
+    private float velocidad;//Está en relación a la velocidad de Bomberman
+    private int puntaje;//Puntos que da a la hora de matarlo
+    private int inteligencia;//Nivel de Inteligencia, especificadas en la clase IA
     private int muros;
     private static int nivel;
-    private int x;
-    private int y;
+    private int x;//pos
+    private int y;//pos
     public static BufferedImage animacion;
-    private static Nivel nivelMapa;//mapa para acceder a mapa
+    private static Nivel nivelMapa;//Nivel para acceder a mapa
     public Tablero tablero;
 
+    //Constructor de la clase
     public Villano(int nivel, int x, int y, Nivel nivelMapa){
         float[] parametros = clasificacion(nivel);
         this.nivel = nivel;
@@ -28,6 +30,7 @@ public class Villano {
         System.out.println("Nivel = " +this.nivel+ " Velocidad = " +this.velocidad+ " Muros = "+this.muros+ " Inteligencia = "+this.inteligencia + " Puntaje = " +this.puntaje+" PosX = "+this.x+" PosY = "+this.y);
     }
 
+    //Iniciliza todo lo necesario para tener un villano
     public static void init(){
         ia = new IA(nivelMapa);
         switch (nivel){
@@ -36,6 +39,8 @@ public class Villano {
         }
     }
 
+    //Depende del nivel del villano, este tendrá diverdas caracteristicas, este metodo se encarga de
+    //obtener esas estadísticas
     private float[] clasificacion(int nivel){
         if(nivel>=1 && nivel<=3){
             return ParametrosVillanos.primeros[nivel-1];
@@ -52,11 +57,12 @@ public class Villano {
         }
     }
 
+    //Obtiene el x,y del siguiente que debería de realizar el Enemigo
     public void update(){
         siguienteMov(nivel);
     }
 
-    //nivel de villano
+    //Según el Nivel del villano, este metodo actualiza el x,y del enemigo, según la inteligencia que el mismo posee
     public void siguienteMov(int nivel){
         int[] nextmov;
         switch (nivel){
