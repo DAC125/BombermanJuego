@@ -2,15 +2,17 @@ package bomberman;
 
 import java.util.*;
 
+//Encuentra el camino mas corto entre dos nodos
 public class AStar {
-    private static int DEFAULT_COST = 1; // Horizontal - Vertical Cost
+    private static int DEFAULT_COST = 1; // Costo de moverse una casilla vertical u horizontalmente
     private int hvCost;
-    private Node[][] searchArea;
-    private PriorityQueue<Node> openList;
-    private Set<Node> closedSet;
-    private Node initialNode;
-    private Node finalNode;
+    private Node[][] searchArea;//Matriz de nodos igual a la matriz de juego
+    private PriorityQueue<Node> openList;//Listas con las que trabaja A estrella
+    private Set<Node> closedSet;//Listas con las que trabaja A estrella
+    private Node initialNode;//Nodo al que se quiere llegar desde x nodo actual
+    private Node finalNode;//Nodo destino
 
+    //Constructor de la clase(filas y columnas de la matriz, nodo inicial, final y el coste de pasar entre nodo y nodo)
     public AStar(int rows, int cols, Node initialNode, Node finalNode, int hvCost) {
         this.hvCost = hvCost;
         setInitialNode(initialNode);
@@ -30,6 +32,9 @@ public class AStar {
         this(rows, cols, initialNode, finalNode, DEFAULT_COST);
     }
 
+    //Método encargado de crear la matriz de nodos, y calcula la heuristica de una vez de todos los nodos
+    //O sea, la distancia aprox hasta el nodo final; al principio solo inicializa la matriz, por lo que no
+    //Existen muros
     private void setNodes() {
         for (int i = 0; i < searchArea.length; i++) {
             for (int j = 0; j < searchArea[0].length; j++) {
@@ -40,7 +45,10 @@ public class AStar {
         }
     }
 
-    public void setBlocks(ArrayList<Node> blocksArray) {//parametros anteriores:int[][] blocksArray
+    //Dada una lista de coordenadas en la que existe un bloque, esta función se encarga de
+    //Setear en true, la variable que indica sí existe un bloque en esa posición
+    //Esto lo realiza en la matriz de nodos "searchArea"
+    public void setBlocks(ArrayList<Node> blocksArray) {
         for (int i = 0; i < blocksArray.size(); i++) {
             int row = blocksArray.get(i).getRow();
             int col = blocksArray.get(i).getCol();
@@ -48,6 +56,7 @@ public class AStar {
         }
     }
 
+    //Encuentra el camino mas corto entre dos nodos
     public List<Node> findPath() {
         openList.add(initialNode);
         while (!isEmpty(openList)) {
@@ -62,6 +71,8 @@ public class AStar {
         return new ArrayList<Node>();
     }
 
+    //Una vez se llega al nodo final, se devuelve el camino final, esto se hace
+    //recorriendo los padres de los mejores nodos
     private List<Node> getPath(Node currentNode) {
         List<Node> path = new ArrayList<Node>();
         path.add(currentNode);
@@ -73,12 +84,14 @@ public class AStar {
         return path;
     }
 
+    //Llama a la funciones encargadas de revisar los nodos adyacentes a un nodo actual
     private void addAdjacentNodes(Node currentNode) {
         addAdjacentUpperRow(currentNode);
         addAdjacentMiddleRow(currentNode);
         addAdjacentLowerRow(currentNode);
     }
 
+    //revisa los nodos adyacentes en la siguiente fila del nodo actual
     private void addAdjacentLowerRow(Node currentNode) {
         int row = currentNode.getRow();
         int col = currentNode.getCol();
@@ -88,6 +101,7 @@ public class AStar {
         }
     }
 
+    //revisa los nodos adyacentes a los lados del nodo actual
     private void addAdjacentMiddleRow(Node currentNode) {
         int row = currentNode.getRow();
         int col = currentNode.getCol();
@@ -100,6 +114,7 @@ public class AStar {
         }
     }
 
+    //revisa los nodos adyacentes en la anterior fila del nodo actual
     private void addAdjacentUpperRow(Node currentNode) {
         int row = currentNode.getRow();
         int col = currentNode.getCol();
@@ -109,6 +124,8 @@ public class AStar {
         }
     }
 
+    //Revisa si el nodo no es un muro o sí ya fue visitado con anterioridad, en cuyo caso
+    //lo agrega el openList, o cambia el valor actual, en caso de que este esté en la openList
     private void checkNode(Node currentNode, int col, int row, int cost) {
         Node adjacentNode = getSearchArea()[row][col];
         if (!adjacentNode.isBlock() && !getClosedSet().contains(adjacentNode)) {
@@ -118,8 +135,8 @@ public class AStar {
             } else {
                 boolean changed = adjacentNode.checkBetterPath(currentNode, cost);
                 if (changed) {
-                    // Remove and Add the changed node, so that the PriorityQueue can sort again its
-                    // contents with the modified "finalCost" value of the modified node
+                    // borra y agrega de nuevo el nodo cambiado, así la cola de prioridad puede volver a ordenar
+                    // su contenido con el costo final del nodo cambiado
                     getOpenList().remove(adjacentNode);
                     getOpenList().add(adjacentNode);
                 }
@@ -135,6 +152,7 @@ public class AStar {
         return openList.size() == 0;
     }
 
+    //setea el nodo para que sea un obstaculo
     private void setBlock(int row, int col) {
         this.searchArea[row][col].setBlock(true);
     }
